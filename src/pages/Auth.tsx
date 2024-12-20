@@ -27,7 +27,16 @@ const Auth = () => {
       });
       return;
     }
-    // In a real app, this would call an API to send the SMS
+    
+    if (!phoneNumber.match(/^\+?[\d\s-]{10,}$/)) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid phone number",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setStep("code");
     toast({
       title: "Verification code sent",
@@ -46,7 +55,7 @@ const Auth = () => {
       return;
     }
     
-    if (code === "123456") { // Mock validation
+    if (code === "123456") {
       navigate("/chats");
       toast({
         title: "Successfully connected",
@@ -55,9 +64,10 @@ const Auth = () => {
     } else {
       toast({
         title: "Invalid code",
-        description: "Please try again",
+        description: "⚠️ Incorrect code. Please try again.",
         variant: "destructive",
       });
+      setCode("");
     }
   };
 
@@ -101,8 +111,8 @@ const Auth = () => {
                 onChange={(value) => setCode(value)}
                 render={({ slots }) => (
                   <InputOTPGroup className="gap-2">
-                    {slots.map((slot, index) => (
-                      <InputOTPSlot key={index} index={index} {...slot} />
+                    {Array.from({ length: 6 }).map((_, index) => (
+                      <InputOTPSlot key={index} index={index} />
                     ))}
                   </InputOTPGroup>
                 )}
