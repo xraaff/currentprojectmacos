@@ -10,6 +10,10 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
+// Dummy data for testing
+const VALID_TEST_CODE = "123456";
+const TEST_PHONE_HINT = "+1234567890";
+
 const Auth = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [code, setCode] = useState("");
@@ -22,16 +26,17 @@ const Auth = () => {
     if (!phoneNumber) {
       toast({
         title: "Error",
-        description: "Please enter your phone number",
+        description: "Please enter any test phone number",
         variant: "destructive",
       });
       return;
     }
     
+    // Simple validation for demo purposes
     if (!phoneNumber.match(/^\+?[\d\s-]{10,}$/)) {
       toast({
         title: "Error",
-        description: "Please enter a valid phone number",
+        description: `Please enter a valid phone number format (e.g., ${TEST_PHONE_HINT})`,
         variant: "destructive",
       });
       return;
@@ -39,8 +44,8 @@ const Auth = () => {
 
     setStep("code");
     toast({
-      title: "Verification code sent",
-      description: "Please check your phone for the code",
+      title: "Test mode",
+      description: `Use this test code: ${VALID_TEST_CODE}`,
     });
   };
 
@@ -49,22 +54,22 @@ const Auth = () => {
     if (code.length !== 6) {
       toast({
         title: "Error",
-        description: "Please enter a valid 6-digit code",
+        description: "Please enter a 6-digit code",
         variant: "destructive",
       });
       return;
     }
     
-    if (code === "123456") {
+    if (code === VALID_TEST_CODE) {
       navigate("/chats");
       toast({
-        title: "Successfully connected",
-        description: "Welcome to Telegram Data Extractor",
+        title: "Test login successful",
+        description: "Welcome to the Telegram Data Extractor demo",
       });
     } else {
       toast({
-        title: "Invalid code",
-        description: "⚠️ Incorrect code. Please try again.",
+        title: "Invalid test code",
+        description: `⚠️ Please use the test code: ${VALID_TEST_CODE}`,
         variant: "destructive",
       });
       setCode("");
@@ -80,8 +85,8 @@ const Auth = () => {
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             {step === "phone"
-              ? "Enter your phone number to receive a verification code"
-              : "Enter the verification code sent to your phone"}
+              ? `Demo mode: Enter any valid phone number (e.g., ${TEST_PHONE_HINT})`
+              : `Enter the test code: ${VALID_TEST_CODE}`}
           </p>
         </div>
 
@@ -91,7 +96,7 @@ const Auth = () => {
               <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 type="tel"
-                placeholder="+1234567890"
+                placeholder={TEST_PHONE_HINT}
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 className="pl-10"
@@ -99,7 +104,7 @@ const Auth = () => {
               />
             </div>
             <Button type="submit" className="w-full">
-              Send Code
+              Send Test Code
             </Button>
           </form>
         ) : (
