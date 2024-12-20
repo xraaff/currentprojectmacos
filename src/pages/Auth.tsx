@@ -4,6 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Phone } from "lucide-react";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 const Auth = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -14,6 +19,14 @@ const Auth = () => {
 
   const handlePhoneSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!phoneNumber) {
+      toast({
+        title: "Error",
+        description: "Please enter your phone number",
+        variant: "destructive",
+      });
+      return;
+    }
     // In a real app, this would call an API to send the SMS
     setStep("code");
     toast({
@@ -24,6 +37,15 @@ const Auth = () => {
 
   const handleCodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (code.length !== 6) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid 6-digit code",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (code === "123456") { // Mock validation
       navigate("/chats");
       toast({
@@ -72,15 +94,20 @@ const Auth = () => {
           </form>
         ) : (
           <form onSubmit={handleCodeSubmit} className="mt-8 space-y-6">
-            <Input
-              type="text"
-              placeholder="Enter verification code"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              maxLength={6}
-              className="text-center text-2xl tracking-widest"
-              required
-            />
+            <div className="flex justify-center">
+              <InputOTP
+                value={code}
+                onChange={(value) => setCode(value)}
+                maxLength={6}
+                render={({ slots }) => (
+                  <InputOTPGroup className="gap-2">
+                    {slots.map((slot, index) => (
+                      <InputOTPSlot key={index} {...slot} />
+                    ))}
+                  </InputOTPGroup>
+                )}
+              />
+            </div>
             <Button type="submit" className="w-full">
               Connect
             </Button>
