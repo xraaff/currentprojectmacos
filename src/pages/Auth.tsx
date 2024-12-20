@@ -96,9 +96,9 @@ const Auth = () => {
           <form onSubmit={handleCodeSubmit} className="mt-8 space-y-6">
             <div className="flex justify-center">
               <InputOTP
+                maxLength={6}
                 value={code}
                 onChange={(value) => setCode(value)}
-                maxLength={6}
                 render={({ slots }) => (
                   <InputOTPGroup className="gap-2">
                     {slots.map((slot, index) => (
