@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Harvest AI</title>
+    <script>
+        async function getChatID() {
+            const link = document.getElementById("link-input").value;
+            try {
+                const response = await fetch("http://localhost:8000/get_chat_id", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ link_input: link })
+                });
+                const data = await response.json();
+                document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById("output").innerText = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Cloud Harvest AI</h1>
+    <label for="link">Enter Telegram Channel/Chat Link:</label>
+    <input type="text" id="link-input" placeholder="https://t.me/example">
+    <button onclick="getChatID()">Get Chat ID</button>
+    <pre id="output"></pre>
+</body>
+</html>
